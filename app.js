@@ -450,7 +450,7 @@ app.get('/api/favorites', function(request, response) {
 app.get('/api/twearch', function(request, response) {
     var term = request.query.term;
     var options = {
-    	host: twitterCreds.username+":"+twitterCreds.password+":"+twitterCreds.host,
+    	host: twitterCreds.username+":"+twitterCreds.password+"@"+twitterCreds.host,
     	port: twitterCreds.port,
     	path: "/api/v1/messages/search?q="+term
     };
