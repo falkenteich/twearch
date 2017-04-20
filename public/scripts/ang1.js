@@ -18,14 +18,14 @@ app1.controller('ctrl1', function($scope) {
 	$scope.twearch = function() {
 		$scope.searchResultsHeading = "Loading Tweets containing "+$scope.searchTerm+"...";
 		var queryParams = "?term=" + $scope.searchTerm;
-		xxhrGet('api/twearch'+queryParams, function(data) {
+		xhrGet('api/twearch'+queryParams, function(data) {
 			$scope.searchResultsHeading = "Tweets containing "+$scope.searchTerm;
 			var receivedItems = data || [];
 			var items = [];
 			var i;
 			for (i = 0; i < receivedItems.length; ++i) {
 				var item = receivedItems[i];
-				if (item && 'user' in item) {
+				if (item && ('user' in item || 'username' in item)) {
 					items.push(item);
 				}
 			}
@@ -37,7 +37,7 @@ app1.controller('ctrl1', function($scope) {
 	};
 });
 function xxhrGet(url, callback, errback) {
-	var term = url.substr(url.indexOf("="));
+	var term = url.substr(url.indexOf("=")+1);
 	var results = [
 		{ bogus:"John A. Smith", text:"Some random tweet containing "+term+"." },
 		{ user:"John A. Smith", text:"Some random tweet containing "+term+"." },

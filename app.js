@@ -429,6 +429,26 @@ app.get('/api/favorites', function(request, response) {
 
 });
 
+app.get('/api/twearch', function(request, response) {
+    var term = request.query.term;
+	var results = [
+		{ bogus:"John T. Smith", text:"Some random tweet containing "+term+"." },
+		{ user:"John U. Smith", text:"Some random tweet containing "+term+"." },
+		{ user:"John V. Doe", text:"Some other random tweet with "+term+"." },
+		{ user:"Jane W. Doe", text:"Another interesting "+term+" tweet." },
+		{ user:"Jane X. Tarzan", text:"Yet another "+term+" tweet." } ];
+	if (results) {
+		response.status(200);
+		response.setHeader('Content-Type', 'text/plain');
+        response.write(JSON.stringify(results));
+	} else {
+		response.status(500);
+		response.setHeader('Content-Type', 'text/plain');
+		response.write("Error!");
+	}
+	response.end();
+	return;
+});
 
 http.createServer(app).listen(app.get('port'), '0.0.0.0', function() {
     console.log('Express server listening on port ' + app.get('port'));
