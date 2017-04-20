@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app1" ng-init="author={fName:'Alex',lName='Feinberg'}">
 <head>
 	<title>Twearch by Alex</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -9,11 +9,17 @@
 </head>
 <body>
 	<div class = "container">
-	<div class = "banner">
+	<div class = "banner" ng-controller="ctrl1">
 		<img class="newappIcon" src="images/newapp-icon.png">
-		<p class = "appTitle">Welcome to Twearch!!</p>
+		<p class = "appTitle">{{author.fName + " " + author.lName}} welcomes you to Twearch!!</p>
+		<input type="text" ng-model="first" />
+		<input type="text" ng-model="second" />
+		<button ng-click="updateValue()">Sum</button>
+		<br><br>
+		{{calculation}}
+		<p>First value = {{first}}</p>
+		<p>Second value = <span data-ng-bind="second"></span></p>
 	</div>
-
 
 	<section>
 		<table id='notes' class='records' border='0' cellspacing='0' cellpadding='0'><tbody></tbody></table>
@@ -41,5 +47,7 @@
 	<div id="myImage"><div id="innerImg"></div></div>
 	<br><br><br>
 	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+    <script src="/scripts/ang1.js"></script>
 </body>
 </html>
