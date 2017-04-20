@@ -12,18 +12,11 @@
 	<div class = "banner" ng-controller="ctrl1">
 		<img class="newappIcon" src="images/newapp-icon.png">
 		<p class = "appTitle">{{author.fName + " " + author.lName}} welcomes you to Twearch!!</p>
-		<input type="text" ng-model="first" />
-		<input type="text" ng-model="second" />
-		<button ng-click="updateValue()">Sum</button>
-		<br><br>
-		{{calculation}}
-		<p>First value = {{first}}</p>
-		<p>Second value = <span data-ng-bind="second"></span></p>
-		<br><br>
 		<input type="text" ng-model="searchTerm" />
 		<button ng-click="search()">Search</button>
+		<button ng-click="clear()">Search</button>
 		<br><br>
-		<p>Here are the Tweets containing {{searchTerm}}:</p>
+		<p>Tweets containing: {{searchTerm}}</p>
 		<ul>
 			<li ng-repeat = "searchResult in searchResults">
 			{{ 'User: ' + searchResult.user + ', Tweet: ' + searchResult.text }}
