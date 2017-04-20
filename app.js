@@ -47,6 +47,19 @@ if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
 
+function getTwitterCreds() {
+	var vcapServices = process.env.VCAP_SERVICES;
+	if (!vcapServices) {
+		fs.readFileSync("vcap-local.json", "utf-8");
+    }
+    for (var vcapService in vcapServices) {
+		if (vcapService.match(/twitterinsights/i)) {
+			return vcapServices[vcapService][0].credentials;
+        }
+    }
+}
+var twitterCreds = getTwitterCreds();
+
 function getDBCredentialsUrl(jsonData) {
     var vcapServices = JSON.parse(jsonData);
     // Pattern match to find the first instance of a Cloudant service in
@@ -432,11 +445,12 @@ app.get('/api/favorites', function(request, response) {
 app.get('/api/twearch', function(request, response) {
     var term = request.query.term;
 	var results = [
+		twitterCreds,
 		{ bogus:"John T. Smith", text:"Some random tweet containing "+term+"." },
-		{ user:"John U. Smith", text:"Some random tweet containing "+term+"." },
-		{ user:"John V. Doe", text:"Some other random tweet with "+term+"." },
-		{ user:"Jane W. Doe", text:"Another interesting "+term+" tweet." },
-		{ user:"Jane X. Tarzan", text:"Yet another "+term+" tweet." } ];
+		{ username:"John U. Smith", text:"Some random tweet containing "+term+"." },
+		{ username:"John V. Doe", text:"Some other random tweet with "+term+"." },
+		{ username:"Jane W. Doe", text:"Another interesting "+term+" tweet." },
+		{ username:"Jane X. Tarzan", text:"Yet another "+term+" tweet." } ];
 	if (results) {
 		response.status(200);
 		response.setHeader('Content-Type', 'text/plain');

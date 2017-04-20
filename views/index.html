@@ -16,11 +16,10 @@
 		<button ng-click="twearch()">Search</button>
 		<button ng-click="clear()">Clear</button>
 		<br><br>
-		<p>Tweets containing: {{searchTerm}}</p>
+		<p>{{searchResultsHeading}}</p>
 		<ul>
 			<li ng-repeat = "searchResult in searchResults">
-			{{ 'User: ' + searchResult.user + ', Tweet: ' + searchResult.text }}
-			{{ 'URL: ' + searchResult.url }}
+			{{ 'User: ' + searchResult.user + ', Tweeted: ' + searchResult.text + searchResult.url }}
 			</li>
 		</ul>
 		<br><br>

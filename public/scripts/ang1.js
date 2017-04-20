@@ -22,10 +22,9 @@ app1.controller('ctrl1', function($scope) {
 			$scope.searchResultsHeading = "Tweets containing "+$scope.searchTerm;
 			var receivedItems = data || [];
 			var items = [];
-			var i;
-			for (i = 0; i < receivedItems.length; ++i) {
+			for (var i = 0; i < receivedItems.length; ++i) {
 				var item = receivedItems[i];
-				if (item && ('user' in item || 'username' in item)) {
+				if (item && 'username' in item) {
 					items.push(item);
 				}
 			}
@@ -40,10 +39,10 @@ function xxhrGet(url, callback, errback) {
 	var term = url.substr(url.indexOf("=")+1);
 	var results = [
 		{ bogus:"John A. Smith", text:"Some random tweet containing "+term+"." },
-		{ user:"John A. Smith", text:"Some random tweet containing "+term+"." },
-		{ user:"John B. Doe", text:"Some other random tweet with "+term+"." },
-		{ user:"Jane C. Doe", text:"Another interesting "+term+" tweet." },
-		{ user:"Jane D. Tarzan", text:"Yet another "+term+" tweet." } ];
+		{ username:"John A. Smith", text:"Some random tweet containing "+term+"." },
+		{ username:"John B. Doe", text:"Some other random tweet with "+term+"." },
+		{ username:"Jane C. Doe", text:"Another interesting "+term+" tweet." },
+		{ username:"Jane D. Tarzan", text:"Yet another "+term+" tweet." } ];
 	if (results) {
 		callback(results);
 	} else {
