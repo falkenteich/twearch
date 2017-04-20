@@ -54,15 +54,14 @@ function getTwitterCreds() {
 	if (!vcapServices) {
 		fs.readFileSync("vcap-local.json", "utf-8");
     }
-    var twitterCreds = { username: "unknown", text: "default" };
-    for (var vcapService in vcapServices) {
-		if (vcapService.match(/twitter/i)) {
-			var creds = vcapServices[vcapService][0].credentials;
-			twitterCreds = { username: creds.username, text: creds.url };
-			return twitterCreds;
+    var services = JSON.parse(vcapServices);
+    for (var service in services) {
+		if (service.match(/twitter/i)) {
+			var creds = services[service][0].credentials;
+			return { username: creds.username, text: creds.url };
         }
     }
-    return twitterCreds;
+    return { username: "unknown", text: "default" };
 }
 var twitterCreds = getTwitterCreds();
 

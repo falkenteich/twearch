@@ -19,7 +19,6 @@ app1.controller('ctrl1', function($scope) {
 		$scope.searchResultsHeading = "Loading Tweets containing "+$scope.searchTerm+"...";
 		var queryParams = "?term=" + $scope.searchTerm;
 		xhrGet('api/twearch'+queryParams, function(data) {
-			$scope.searchResultsHeading = "Tweets containing "+$scope.searchTerm;
 			var receivedItems = data || [];
 			var items = [];
 			for (var i = 0; i < receivedItems.length; ++i) {
@@ -28,6 +27,7 @@ app1.controller('ctrl1', function($scope) {
 					items.push(item);
 				}
 			}
+			$scope.searchResultsHeading = "Tweets containing "+$scope.searchTerm;
 			$scope.searchResults = items;
 		}, function(err) {
 			console.error(err);
@@ -35,17 +35,3 @@ app1.controller('ctrl1', function($scope) {
 		});
 	};
 });
-function xxhrGet(url, callback, errback) {
-	var term = url.substr(url.indexOf("=")+1);
-	var results = [
-		{ bogus:"John A. Smith", text:"Some random tweet containing "+term+"." },
-		{ username:"John A. Smith", text:"Some random tweet containing "+term+"." },
-		{ username:"John B. Doe", text:"Some other random tweet with "+term+"." },
-		{ username:"Jane C. Doe", text:"Another interesting "+term+" tweet." },
-		{ username:"Jane D. Tarzan", text:"Yet another "+term+" tweet." } ];
-	if (results) {
-		callback(results);
-	} else {
-		errback('service not available');
-	}
-}
