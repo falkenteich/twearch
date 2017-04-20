@@ -449,6 +449,51 @@ app.get('/api/favorites', function(request, response) {
 
 app.get('/api/twearch', function(request, response) {
     var term = request.query.term;
+	xhrGet(twitterCreds.text+"/api/v1/messages/search?q="+term, function(data) {
+		var tweets = data.tweets || [];
+		var items = [];
+		for (var i = 0; i < tweets.length && i < 10; ++i) {
+			console.log("####### GOT A TWEET: "+JSON.stringify(tweets[i].message));
+			var item = tweets[i].message;
+			var user = item.actor.displayName;
+			var msg =  item.body;
+			console.log("####### HAD A TWEET: "+user+" "+msg);
+			items.push({ username:user, text:msg});
+		}
+		response.status(200);
+		response.setHeader('Content-Type', 'text/plain');
+        response.write(JSON.stringify(items));
+		response.end();
+		return;
+	}, function(err) {
+		console.error(err);
+		response.status(500);
+		response.setHeader('Content-Type', 'text/plain');
+		response.write("Error! "+err);
+		response.end();
+		return;
+	});    
+});
+
+function xhrGet(url, callback, errback){
+	var xhr = new createXHR();
+	xhr.open("GET", url, true);
+	xhr.onreadystatechange = function(){
+		if(xhr.readyState == 4){
+			if(xhr.status == 200){
+				callback(parseJson(xhr.responseText));
+			}else{
+				errback('service not available');
+			}
+		}
+	};
+	xhr.timeout = 100000;
+	xhr.ontimeout = errback;
+	xhr.send();
+}
+
+app.get('/api/twearchTest', function(request, response) {
+    var term = request.query.term;
 	var results = [
 		twitterCreds,
 		{ bogus:"John T. Smith", text:"Some random tweet containing "+term+"." },
