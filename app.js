@@ -6,6 +6,7 @@ var express = require('express'),
     routes = require('./routes'),
     user = require('./routes/user'),
     http = require('http'),
+    https = require('https'),
     path = require('path'),
     fs = require('fs');
 
@@ -57,11 +58,10 @@ function getTwitterCreds() {
     var services = JSON.parse(vcapServices);
     for (var service in services) {
 		if (service.match(/twitter/i)) {
-			var creds = services[service][0].credentials;
-			return { username: creds.username, text: creds.url };
+			return services[service][0].credentials;
         }
     }
-    return { username: "unknown", text: "default" };
+    return {};
 }
 var twitterCreds = getTwitterCreds();
 
@@ -449,8 +449,20 @@ app.get('/api/favorites', function(request, response) {
 
 app.get('/api/twearch', function(request, response) {
     var term = request.query.term;
-	xhrGet(twitterCreds.text+"/api/v1/messages/search?q="+term, function(data) {
-		var tweets = data.tweets || [];
+    var options = {
+    	host: twitterCreds.username+":"+twitterCreds.password+":"+twitterCreds.host,
+    	port: twitterCreds.port,
+    	path: "/api/v1/messages/search?q="+term
+    };
+    getTweets(options, function(err, tweets) {
+    	if (err) {
+			console.error("Error getting tweets ", err);
+			response.status(500);
+			response.setHeader('Content-Type', 'text/plain');
+			response.write("Error! "+err);
+			response.end();
+			return;
+    	}
 		var items = [];
 		for (var i = 0; i < tweets.length && i < 10; ++i) {
 			console.log("####### GOT A TWEET: "+JSON.stringify(tweets[i].message));
@@ -465,51 +477,28 @@ app.get('/api/twearch', function(request, response) {
         response.write(JSON.stringify(items));
 		response.end();
 		return;
-	}, function(err) {
-		console.error(err);
-		response.status(500);
-		response.setHeader('Content-Type', 'text/plain');
-		response.write("Error! "+err);
-		response.end();
-		return;
-	});    
+    });
 });
 
-function createXHR(){
-	if(typeof XMLHttpRequest != 'undefined'){
-		return new XMLHttpRequest();
-	}else{
-		try{
-			return new ActiveXObject('Msxml2.XMLHTTP');
-		}catch(e){
-			try{
-				return new ActiveXObject('Microsoft.XMLHTTP');
-			}catch(e){}
-		}
-	}
-	return null;
-}
-function xhrGet(url, callback, errback){
-	var xhr = new createXHR();
-	xhr.open("GET", url, true);
-	xhr.onreadystatechange = function(){
-		if(xhr.readyState == 4){
-			if(xhr.status == 200){
-				callback(parseJson(xhr.responseText));
-			}else{
-				errback('service not available');
-			}
-		}
-	};
-	xhr.timeout = 100000;
-	xhr.ontimeout = errback;
-	xhr.send();
+function getTweets(options, callback) {
+	https.get(options, function(response) {
+		var body = '';
+		response.on('data', function(chunk) {
+			body += chunk;
+		});
+		response.on('end', function() {
+			var result = JSON.parse(body);
+			callback(null, result);
+		});
+		response.on('error', callback);
+	})
+	.on('error', callback)
+	.end();
 }
 
 app.get('/api/twearchTest', function(request, response) {
     var term = request.query.term;
 	var results = [
-		twitterCreds,
 		{ bogus:"John T. Smith", text:"Some random tweet containing "+term+"." },
 		{ username:"John U. Smith", text:"Some random tweet containing "+term+"." },
 		{ username:"John V. Doe", text:"Some other random tweet with "+term+"." },
