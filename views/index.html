@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app1" ng-init="author={fName:'Alex',lName='Feinberg'}">
+<html ng-app="app1" ng-init="author={fName:'Alex', lName:'Feinberg'}">
 <head>
 	<title>Twearch by Alex</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -19,6 +19,17 @@
 		{{calculation}}
 		<p>First value = {{first}}</p>
 		<p>Second value = <span data-ng-bind="second"></span></p>
+		<br><br>
+		<input type="text" ng-model="searchTerm" />
+		<button ng-click="search()">Search</button>
+		<br><br>
+		<p>Here are the Tweets containing {{searchTerm}}:</p>
+		<ul>
+			<li ng-repeat = "searchResult in searchResults">
+			{{ 'User: ' + searchResult.user + ', Tweet: ' + searchResult.text }}
+			</li>
+		</ul>
+		<br><br>
 	</div>
 
 	<section>
