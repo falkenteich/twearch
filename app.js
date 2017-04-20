@@ -52,11 +52,15 @@ function getTwitterCreds() {
 	if (!vcapServices) {
 		fs.readFileSync("vcap-local.json", "utf-8");
     }
+    var twitterCreds = { username: "unknown", text: "default" };
     for (var vcapService in vcapServices) {
-		if (vcapService.match(/twitterinsights/i)) {
-			return vcapServices[vcapService][0].credentials;
+		if (vcapService.match(/twitter/i)) {
+			var creds = vcapServices[vcapService][0].credentials;
+			twitterCreds = { username: creds.username, text: creds.url };
+			return twitterCreds;
         }
     }
+    return twitterCreds;
 }
 var twitterCreds = getTwitterCreds();
 
@@ -455,11 +459,12 @@ app.get('/api/twearch', function(request, response) {
 		response.status(200);
 		response.setHeader('Content-Type', 'text/plain');
         response.write(JSON.stringify(results));
-	} else {
-		response.status(500);
-		response.setHeader('Content-Type', 'text/plain');
-		response.write("Error!");
+		response.end();
+		return;
 	}
+	response.status(500);
+	response.setHeader('Content-Type', 'text/plain');
+	response.write("Error!");
 	response.end();
 	return;
 });
