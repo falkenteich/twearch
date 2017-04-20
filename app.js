@@ -47,6 +47,8 @@ if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
 
+console.log('##########VCAP_SERVICES###############: ' + JSON.stringify(process.env.VCAP_SERVICES));
+
 function getTwitterCreds() {
 	var vcapServices = process.env.VCAP_SERVICES;
 	if (!vcapServices) {
