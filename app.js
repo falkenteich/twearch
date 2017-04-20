@@ -449,11 +449,12 @@ app.get('/api/favorites', function(request, response) {
 
 app.get('/api/twearch', function(request, response) {
     var term = request.query.term;
-    var options = {
-    	host: twitterCreds.username+":"+twitterCreds.password+"@"+twitterCreds.host,
-    	port: twitterCreds.port,
-    	path: "/api/v1/messages/search?q="+term
-    };
+    //var xoptions = {
+    //	host: twitterCreds.username+":"+twitterCreds.password+"@"+twitterCreds.host,
+    //	port: twitterCreds.port,
+    //	path: "/api/v1/messages/search?q="+term
+    //};
+    var options = twitterCreds.url+"/api/v1/messages/search?q="+term;
     getTweets(options, function(err, tweets) {
     	if (err) {
 			console.error("Error getting tweets ", err);
