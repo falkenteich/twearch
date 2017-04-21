@@ -10,25 +10,40 @@
 <body>
 	<div class = "container">
 	<div class = "banner" ng-controller="ctrl1">
-		<img class="newappIcon" src="images/newapp-icon.png">
 		<p class = "appTitle">{{author.fName + " " + author.lName}} welcomes you to Twearch!!</p>
-		<input type="text" ng-model="searchTerm" />
-		<button ng-click="twearch()">Search</button>
-		<button ng-click="clear()">Clear</button>
-		<br><br>
-		<p>{{searchResultsHeading}}</p>
-		<ul>
-			<li ng-repeat = "searchResult in searchResults">
-			{{ 'User ' + searchResult.username + ' tweeted ' + searchResult.text }}
-			</li>
-		</ul>
+		<div style="width: 800px; text-align: center">
+			<input type="text" ng-model="searchTerm" />
+			<button ng-click="twearch()">Twearch</button>
+			<button ng-click="clear()">Clear</button>
+			<br><br>
+			<span style="line-height: 24px; font: 20px Helvetica, Arial, sans-serif;">{{searchResultsHeading}}</span>
+			<br><br>
+		</div>
+		<table style="width:800px; border:0" ng-hide="searchResultsHeading==''">
+			<tr>
+				<td class="sentNeg"><div style="width: 180px; text-align: center">Negative</div></td>
+				<td class="sentAmb"><div style="width: 180px; text-align: center">Ambivalent</div></td>
+				<td class="sentNeu"><div style="width: 180px; text-align: center">Neutral</div></td>
+				<td class="sentPos"><div style="width: 180px; text-align: center">Positive</div></td>
+			</tr>
+		</table>
+		<br>
+		<table style="width:800px; margin: 0 auto; color: black">
+			<tr ng-repeat="searchResult in searchResults">
+				<td><img src="{{searchResult.image}}" alt="" height="60" width="60" style="padding: 3px"></td>
+				<td style="width:100%; padding: 3px" ng-class="{'sentPos':searchResult.sentiment=='POSITIVE', 'sentNeu':searchResult.sentiment=='NEUTRAL', 'sentAmb':searchResult.sentiment=='AMBIVALENT', 'sentNeg':searchResult.sentiment=='NEGATIVE'}">
+					<span style="line-height: 16px; font: bolder 12px Helvetica, Arial, sans-serif;">{{searchResult.username}}</span><br>
+					<span style="line-height: 18px; font: 14px Helvetica, Arial, sans-serif;">{{searchResult.text}}</span>
+				</td>
+			</tr>
+		</table>
 		<br><br>
 	</div>
 
-	<section>
+	<section ng-hide="true">
 		<table id='notes' class='records' border='0' cellspacing='0' cellpadding='0'><tbody></tbody></table>
 	</section>
-	<footer>
+	<footer ng-hide="true">
 		<div>
 			<!-- <button class='detailBtn' onclick="toggleServiceInfo()" title='Service information'>
 				<img src='images/detail.png' alt='detail'/>

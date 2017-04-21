@@ -1,15 +1,8 @@
 var app1 = angular.module('app1', []);
 app1.controller('ctrl1', function($scope) {
 	$scope.searchTerm = "";
+	$scope.searchResultsHeading = "";
 	$scope.searchResults = [];
-	$scope.search = function() {
-		$scope.searchResultsHeading = "Tweets containing "+$scope.searchTerm;
-		$scope.searchResults = [
-			{ user:"John Smith", text:"Some random tweet containing "+$scope.searchTerm+"." },
-			{ user:"John Doe", text:"Some other random tweet with "+$scope.searchTerm+"." },
-			{ user:"Jane Doe", text:"Another interesting "+$scope.searchTerm+" tweet." },
-			{ user:"Jane Tarzan", text:"Yet another "+$scope.searchTerm+" tweet." } ];
-	};
 	$scope.clear = function() {
 		$scope.searchTerm = "";
 		$scope.searchResultsHeading = "";
@@ -29,9 +22,11 @@ app1.controller('ctrl1', function($scope) {
 			}
 			$scope.searchResultsHeading = "Tweets containing "+$scope.searchTerm;
 			$scope.searchResults = items;
+			$scope.$apply();
 		}, function(err) {
 			console.error(err);
 			$scope.searchResultsHeading = "Error loading Tweets containing "+$scope.searchTerm;
+			$scope.$apply();
 		});
 	};
 });

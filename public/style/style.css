@@ -25,9 +25,11 @@ header, footer {
 }
 
 .banner {
-	background: #5586D6;
-	color: #fff;
+	/*background: #5586D6;*/
+	/*color: #fff;*/
 	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 /* positions */
@@ -51,13 +53,13 @@ footer {
 	border-radius: 0 0 40px 40px;
 }
 
-table {
+/*table {
 	table-layout: fixed;
 	word-wrap: break-word;
 	position: relative;
 	border-collapse: collapse;
 	width: 100%;
-}
+}*/
 .content {
 	font-size: .8rem;
 	width: 30%;
@@ -178,4 +180,17 @@ tr:hover .deleteBtn {
 }
 .appinfo {
 	padding: 10px;
+}
+
+.sentPos {
+	background-color: lightgreen;
+}
+.sentNeu {
+	background-color: yellow;
+}
+.sentAmb {
+	background-color: #ffa62f;
+}
+.sentNeg {
+	background-color: pink;
 }

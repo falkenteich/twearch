@@ -454,7 +454,8 @@ app.get('/api/twearch', function(request, response) {
     //	port: twitterCreds.port,
     //	path: "/api/v1/messages/search?q="+term
     //};
-    var options = twitterCreds.url+"/api/v1/messages/search?q="+term;
+    var options = twitterCreds.url+"/api/v1/messages/search?q="+term+"&size=15";
+    console.log('########### OPTIONS: '+options);
     getTweets(options, function(err, tweets) {
     	if (err) {
 			console.error("Error getting tweets ", err);
@@ -465,13 +466,16 @@ app.get('/api/twearch', function(request, response) {
 			return;
     	}
 		var items = [];
-		for (var i = 0; i < tweets.length && i < 10; ++i) {
-			console.log("####### GOT A TWEET: "+JSON.stringify(tweets[i].message));
-			var item = tweets[i].message;
-			var user = item.actor.displayName;
-			var msg =  item.body;
-			console.log("####### HAD A TWEET: "+user+" "+msg);
-			items.push({ username:user, text:msg});
+		for (var i = 0; i < tweets.length; ++i) {
+			console.log("####### RAW TWEET: "+JSON.stringify(tweets[i]));
+			var tweet = tweets[i];
+			var usr = tweet.message.actor.displayName;
+			var msg = tweet.message.body;
+			var img = tweet.message.actor.image;
+			var cnt = tweet.cde ? tweet.cde.content : null;
+			var snt = cnt ? cnt.sentiment.polarity : "NEUTRAL";
+			console.log("####### PROCESSED TWEET: "+usr+" "+msg+" "+snt);
+			items.push({ username:usr, image:img, text:msg, sentiment:snt});
 		}
 		response.status(200);
 		response.setHeader('Content-Type', 'text/plain');
@@ -482,42 +486,22 @@ app.get('/api/twearch', function(request, response) {
 });
 
 function getTweets(options, callback) {
+	console.log("############# Getting Tweets");
 	https.get(options, function(response) {
 		var body = '';
 		response.on('data', function(chunk) {
 			body += chunk;
 		});
 		response.on('end', function() {
+			console.log("############# Got Tweets");
 			var result = JSON.parse(body);
-			callback(null, result);
+			callback(null, result.tweets);
 		});
 		response.on('error', callback);
 	})
 	.on('error', callback)
 	.end();
 }
-
-app.get('/api/twearchTest', function(request, response) {
-    var term = request.query.term;
-	var results = [
-		{ bogus:"John T. Smith", text:"Some random tweet containing "+term+"." },
-		{ username:"John U. Smith", text:"Some random tweet containing "+term+"." },
-		{ username:"John V. Doe", text:"Some other random tweet with "+term+"." },
-		{ username:"Jane W. Doe", text:"Another interesting "+term+" tweet." },
-		{ username:"Jane X. Tarzan", text:"Yet another "+term+" tweet." } ];
-	if (results) {
-		response.status(200);
-		response.setHeader('Content-Type', 'text/plain');
-        response.write(JSON.stringify(results));
-		response.end();
-		return;
-	}
-	response.status(500);
-	response.setHeader('Content-Type', 'text/plain');
-	response.write("Error!");
-	response.end();
-	return;
-});
 
 http.createServer(app).listen(app.get('port'), '0.0.0.0', function() {
     console.log('Express server listening on port ' + app.get('port'));
