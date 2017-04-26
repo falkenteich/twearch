@@ -1,5 +1,4 @@
 // index.js
-
 var REST_DATA = 'api/favorites';
 var KEY_ENTER = 13;
 var defaultItems = [
@@ -12,9 +11,6 @@ function encodeUriAndQuotes(untrustedStr) {
 
 function loadItems() {
     xhrGet(REST_DATA, function(data) {
-
-        //stop showing loading message
-        stopLoadingMessage();
 
         var receivedItems = data || [];
         var items = [];
@@ -52,20 +48,6 @@ function loadItems() {
     });
 }
 
-function startProgressIndicator(row) {
-    row.innerHTML = "<td class='content'>Uploading file... <img height=\"50\" width=\"50\" src=\"images/loading.gif\"></img></td>";
-}
-
-function removeProgressIndicator(row) {
-    row.innerHTML = "<td class='content'>uploaded...</td>";
-}
-
-function addNewRow(table) {
-    var newRow = document.createElement('tr');
-    table.appendChild(newRow);
-    return table.lastChild;
-}
-
 function uploadFile(node) {
 
     var file = node.previousSibling.files[0];
@@ -91,13 +73,10 @@ function uploadFile(node) {
     var table = row.firstChild.nextSibling.firstChild;
     var newRow = addNewRow(table);
 
-    startProgressIndicator(newRow);
-
     xhrAttach(REST_DATA + "/attach?" + queryParams, form, function(item) {
         console.log('Item id - ' + item.id);
         console.log('attached: ', item);
         row.setAttribute('data-id', item.id);
-        removeProgressIndicator(row);
         setRowContent(item, row);
     }, function(err) {
         console.error(err);
@@ -266,26 +245,4 @@ function saveChange(contentNode, callback) {
         });
     }
 }
-
-function toggleServiceInfo() {
-    var node = document.getElementById('vcapservices');
-    node.style.display = node.style.display == 'none' ? '' : 'none';
-}
-
-function toggleAppInfo() {
-    var node = document.getElementById('appinfo');
-    node.style.display = node.style.display == 'none' ? '' : 'none';
-}
-
-
-function showLoadingMessage() {
-    document.getElementById('loadingImage').innerHTML = "Loading data " + "<img height=\"100\" width=\"100\" src=\"images/loading.gif\"></img>";
-}
-
-function stopLoadingMessage() {
-    document.getElementById('loadingImage').innerHTML = "";
-}
-
-showLoadingMessage();
-//updateServiceInfo();
-loadItems();
+//loadItems();

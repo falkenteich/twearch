@@ -1,10 +1,9 @@
-body,html {
+html {
 	width: 100%;
 	height: 100%;
 	margin: 0 auto;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 100%;
-	color: #283D56;
 }
 .banner {
 	text-align: center;
@@ -22,29 +21,20 @@ body,html {
 tr:hover .deleteBtn {
 	cursor: pointer;
 }
-.errorMsg {
-	color: red;
-	font-weight: normal;
-}
-.appTitle {
-	padding: 15px;
-	font-size: 1.5em;
-}
 .sentPos { background-color: lightgreen; }
 .sentNeu { background-color: yellow; }
 .sentAmb { background-color: #ffa62f; }
 .sentNeg { background-color: pink; }
-.fontXL { font-size: 1.50em; }
-.fontL  { font-size: 1.25em; }
-.fontM  { font-size: 1.00em; }
-.fontS  { font-size: 0.75em; }
-.fontXS { font-size: 0.50em; }
+.message {
+	width: 100%;
+	padding: 4px;
+	vertical-align: top;
+	line-height: 80%;
+}
 .author {
-	font-size: 0.75em;
+	font-size: 0.75rem;
 	font-weight: bold;
-	line-height: 120%;
 }
 .tweet {
-	font-size: 1.00em;
-	line-height: 100%;
+	font-size: 0.75rem;
 }

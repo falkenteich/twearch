@@ -1,71 +1,47 @@
 <!DOCTYPE html>
-<html ng-app="app1" ng-init="author={fName:'Alex', lName:'Feinberg'}">
+<html ng-app="app1" ng-cloak ng-init="author={fName:'Alex', lName:'Feinberg'}">
 <head>
 	<title>Twearch by Alex</title>
+	<style>
+		[ng\:cloak], [ng-cloak], .ng-cloak { display: none; }
+	</style>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<link rel="stylesheet" href="/style/style.css" />
+	<link rel="stylesheet" href="/style/twearch.css" />
 </head>
 <body>
-	<div class = "container">
 	<div class = "banner" ng-controller="ctrl1">
-		<p class = "appTitle">{{author.fName + " " + author.lName}} welcomes you to Twearch!!</p>
-		<div style="width: 800px; text-align: center">
+		<div style="width: {{bodyW}}px; margin: 0 auto; text-align: center">
+			<h2>{{author.fName + " " + author.lName}} welcomes you to Twearch!!</h2>
 			<input type="text" ng-model="searchTerm" />
 			<button ng-click="twearch()">Twearch</button>
+			<button ng-click="clearch()">Clearch</button>
 			<button ng-click="clear()">Clear</button>
-			<br><br>
-			<span style="line-height: 24px; font: 20px Helvetica, Arial, sans-serif;">{{searchResultsHeading}}</span>
-			<br><br>
+			<h3>{{searchResultsHeading}}</h3>
 		</div>
-		<table style="width:800px; border:0" ng-hide="searchResultsHeading==''">
-			<tr>
-				<td class="sentNeg"><div style="width: 180px; text-align: center">Negative</div></td>
-				<td class="sentAmb"><div style="width: 180px; text-align: center">Ambivalent</div></td>
-				<td class="sentNeu"><div style="width: 180px; text-align: center">Neutral</div></td>
-				<td class="sentPos"><div style="width: 180px; text-align: center">Positive</div></td>
+		<table style="width:{{bodyW}}px; margin: 0 auto; border:0" ng-hide="searchResultsHeading==''">
+			<tr class="author">
+				<td class="sentNeg" style="width: 25%; padding: 3px"><div style="text-align: center">Negative</div></td>
+				<td class="sentAmb" style="width: 25%; padding: 3px"><div style="text-align: center">Ambivalent</div></td>
+				<td class="sentNeu" style="width: 25%; padding: 3px"><div style="text-align: center">Neutral</div></td>
+				<td class="sentPos" style="width: 25%; padding: 3px"><div style="text-align: center">Positive</div></td>
 			</tr>
 		</table>
 		<br>
-		<table style="width:800px; margin: 0 auto; color: black">
+		<table style="width:{{bodyW}}px; margin: 0 auto; color: black; text-align: left">
 			<tr ng-repeat="searchResult in searchResults">
-				<td><img src="{{searchResult.image}}" alt="" height="60" width="60" style="padding: 3px"></td>
-				<td style="width:100%; padding: 3px" ng-class="{'sentPos':searchResult.sentiment=='POSITIVE', 'sentNeu':searchResult.sentiment=='NEUTRAL', 'sentAmb':searchResult.sentiment=='AMBIVALENT', 'sentNeg':searchResult.sentiment=='NEGATIVE'}">
-					<span style="line-height: 16px; font: bolder 12px Helvetica, Arial, sans-serif;">{{searchResult.username}}</span><br>
-					<span style="line-height: 18px; font: 14px Helvetica, Arial, sans-serif;">{{searchResult.text}}</span>
+				<td><img src="{{searchResult.image}}" alt="" height="60" width="60"></td>
+				<td class="message" ng-class="{'sentPos':searchResult.sentiment=='POSITIVE', 'sentNeu':searchResult.sentiment=='NEUTRAL', 'sentAmb':searchResult.sentiment=='AMBIVALENT', 'sentNeg':searchResult.sentiment=='NEGATIVE'}">
+					<span class="author">{{searchResult.username}}</span><br>
+					<span class="tweet">{{searchResult.text}}</span>
 				</td>
 			</tr>
 		</table>
-		<br><br>
+		<br>
 	</div>
-
-	<section ng-hide="true">
-		<table id='notes' class='records' border='0' cellspacing='0' cellpadding='0'><tbody></tbody></table>
-	</section>
-	<footer ng-hide="true">
-		<div>
-			<!-- <button class='detailBtn' onclick="toggleServiceInfo()" title='Service information'>
-				<img src='images/detail.png' alt='detail'/>
-			-->
-			<button class="addBtn" onclick="addItem()" title="add record">
-				<img src="images/add.png" alt="add">
-			</button>
-			<br>
-			<a class = "infoImg" onclick="toggleAppInfo()">Help</a>
-		</div>
-		<div id='appinfo' class = 'appinfo' style='display: none;'>
-			Twearch rocks!</br>
-		</div>
-		<div id="loadingImage"></div>
-		<br><br><br><br><br>
-		<div id="errorDiv" class='errorMsg'></div>
-	</footer>
 	<script type="text/javascript" src="/scripts/util.js"></script>
 	<script type="text/javascript" src="/scripts/index.js"></script>
-	<div id="myImage"><div id="innerImg"></div></div>
-	<br><br><br>
-	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
     <script src="/scripts/ang1.js"></script>
 </body>

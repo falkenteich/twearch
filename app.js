@@ -155,7 +155,7 @@ var saveDocument = function(id, name, value, response) {
         response.end();
     });
 
-}
+};
 
 app.get('/api/favorites/attach', function(request, response) {
     var doc = request.query.id;
@@ -481,6 +481,7 @@ app.get('/api/twearch', function(request, response) {
 		response.setHeader('Content-Type', 'text/plain');
         response.write(JSON.stringify(items));
 		response.end();
+		saveTweets(term,items);
 		return;
     });
 });
@@ -501,6 +502,58 @@ function getTweets(options, callback) {
 	})
 	.on('error', callback)
 	.end();
+}
+
+app.get('/api/clearch', function(request, response) {
+	console.log("$$$$$$ CLEARCH API");
+    var term = request.query.term;
+	db = cloudant.use(dbCredentials.dbName);
+	db.list(function(err, body) {
+		if (!err) {
+			var len = body.rows.length;
+			console.log('$$$$$$ NUM RECS = ' + len);
+			if (len > 0) {
+				console.log('$$$$$$ GOT RECS');
+				body.rows.forEach(function(document) {
+					console.log('$$$$$$ REC ID = ' + document.id);
+					db.get(document.id, { revs_info: true }, function(err, doc) {
+                        if (!err) {
+							console.log('$$$$$$ REC TEST TERM = ' + doc.term);
+                        	if (doc.term === term) {
+								console.log('$$$$$$ GOT IT ... NUM ITEM COUNT = ' + doc.items.length);
+								response.status(200);
+								response.setHeader('Content-Type', 'text/plain');
+        						response.write(JSON.stringify(doc.items));
+								response.end();
+								return;
+							}
+						} else {
+							console.log(err);
+						}
+					});
+				});
+			}
+		} else {
+			console.log(err);
+		}
+	});
+});
+
+function saveTweets(term, items) {
+	var id = ''; // assign a new ID
+	db.insert({
+		term: term,
+		items: items
+	}, id, function(err, doc) {
+		if (err) {
+			console.log("#$#$#$#$ saveTweets error: "+err);
+			//response.sendStatus(500);
+		} else {
+			console.log("#$#$#$#$ saveTweets success: "+doc);
+			//response.sendStatus(200);
+		}
+        //response.end();
+	});
 }
 
 http.createServer(app).listen(app.get('port'), '0.0.0.0', function() {
