@@ -4,23 +4,22 @@ app1.controller('ctrl1', function($scope) {
 	$scope.winW = window.screen.availWidth;
 	$scope.maxW = Math.max($scope.winH,$scope.winW);
 	$scope.bodyW = Math.min($scope.maxW,800);
-	$scope.fontXL = '1.5rem';
-	$scope.fontL = '1.25rem';
-	$scope.fontM = '1rem';
-	$scope.fontS = '0.75rem';
-	$scope.fontXS = '0.5rem';
 	$scope.searchTerm = "";
+	$scope.searchOld = false;
 	$scope.searchResultsHeading = "";
 	$scope.searchResults = [];
 	$scope.clear = function() {
 		$scope.searchTerm = "";
+		$scope.searchOld = false;
 		$scope.searchResultsHeading = "";
 		$scope.searchResults = [];
 	};
 	$scope.twearch = function() {
-		$scope.searchResultsHeading = "Searching for Tweets containing "+$scope.searchTerm+"...";
-		var queryParams = "?term=" + $scope.searchTerm;
-		xhrGet('api/twearch'+queryParams, function(data) {
+		var age = $scope.searchOld ? "Old" : "New";
+		var api = $scope.searchOld ? "api/clearch" : "api/twearch";
+		$scope.searchResultsHeading = "Searching for "+age+" Tweets containing "+$scope.searchTerm+"...";
+		var queryParams = "?term=" + $scope.searchTerm.toLowerCase();
+		xhrGet(api+queryParams, function(data) {
 			var receivedItems = data || [];
 			var items = [];
 			for (var i = 0; i < receivedItems.length; ++i) {
@@ -29,12 +28,14 @@ app1.controller('ctrl1', function($scope) {
 					items.push(item);
 				}
 			}
-			$scope.searchResultsHeading = "New Tweets containing "+$scope.searchTerm;
+			$scope.searchResultsHeading = (items.length > 0)
+				? age+" Tweets containing "+$scope.searchTerm
+				: "There are no "+age+" Tweets containing "+$scope.searchTerm;
 			$scope.searchResults = items;
 			$scope.$apply();
 		}, function(err) {
 			console.error(err);
-			$scope.searchResultsHeading = "Error loading Tweets containing "+$scope.searchTerm;
+			$scope.searchResultsHeading = "Error loading "+age+" Tweets containing "+$scope.searchTerm;
 			$scope.$apply();
 		});
 	};

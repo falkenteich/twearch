@@ -14,13 +14,13 @@
 	<div class = "banner" ng-controller="ctrl1">
 		<div style="width: {{bodyW}}px; margin: 0 auto; text-align: center">
 			<h2>{{author.fName + " " + author.lName}} welcomes you to Twearch!!</h2>
-			<input type="text" ng-model="searchTerm" />
+			<input type="text" ng-model="searchTerm" /><br>
+			<label><input type="checkbox" ng-model="searchOld"><span class="tweet">Search previously saved Tweets</span></label><br>
 			<button ng-click="twearch()">Twearch</button>
-			<button ng-click="clearch()">Clearch</button>
 			<button ng-click="clear()">Clear</button>
 			<h3>{{searchResultsHeading}}</h3>
 		</div>
-		<table style="width:{{bodyW}}px; margin: 0 auto; border:0" ng-hide="searchResultsHeading==''">
+		<table style="width:{{bodyW}}px; margin: 0 auto; border:0" ng-hide="searchResults.length==0">
 			<tr class="author">
 				<td class="sentNeg" style="width: 25%; padding: 3px"><div style="text-align: center">Negative</div></td>
 				<td class="sentAmb" style="width: 25%; padding: 3px"><div style="text-align: center">Ambivalent</div></td>
