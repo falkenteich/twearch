@@ -45,7 +45,7 @@ if ('development' === app.get('env')) {
 function getServices() {
 	var vcapServices = process.env.VCAP_SERVICES;
 	if (!vcapServices) {
-		fs.readFileSync("vcap-local.json", "utf-8");
+		vcapServices = fs.readFileSync("vcap-local.json", "utf-8");
     }
     return JSON.parse(vcapServices);
 }
@@ -78,7 +78,7 @@ function initDBConnection() {
     cloudant = require('cloudant')(dbCredentials.url);
     cloudant.db.create(dbCredentials.dbName, function(err, res) {
         if (err) {
-            console.log('Cloudant DB ' + dbCredentials.dbName + ' already exist.');
+            console.log('Cloudant DB ' + dbCredentials.dbName + ' already exists.');
         }
     });
     db = cloudant.use(dbCredentials.dbName);
@@ -176,9 +176,9 @@ app.get('/api/clearch', function(request, response) {
 							response.end();
 							return;
 						}
-						console.log('CLEARCH'+j+'  of '+len+' KEEP LOOKING');
+						console.log('CLEARCH '+j+'  of '+len+' KEEP LOOKING');
 					} else {
-						console.log('CLEARCH'+j+'  of '+len+' ERROR='+err);
+						console.log('CLEARCH '+j+'  of '+len+' ERROR='+err);
 						response.status(500);
 						response.end();
 						return;
