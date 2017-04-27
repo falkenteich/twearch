@@ -35,18 +35,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/style', express.static(path.join(__dirname, '/views/style')));
 
 // development only
-if ('development' == app.get('env')) {
+if ('development' === app.get('env')) {
     app.use(errorHandler());
 }
 
-console.log('##########VCAP_SERVICES###############: ' + JSON.stringify(process.env.VCAP_SERVICES));
-
-function getTwitterCreds() {
+// Return details for bound remote services. When running in Cloud Foundry (e.g. on Bluemix) the details are in
+// an environment variable (VCAP_SERVICES). Otherwise they are stored in a file (vcap-local.json).
+// To create the file, use the output of "cf env" or the app dashboard on Bluemix.
+function getServices() {
 	var vcapServices = process.env.VCAP_SERVICES;
 	if (!vcapServices) {
 		fs.readFileSync("vcap-local.json", "utf-8");
     }
-    var services = JSON.parse(vcapServices);
+    return JSON.parse(vcapServices);
+}
+var services = getServices();
+console.log('### REMOTE SERVICES ### ' + JSON.stringify(services));
+
+// Return the credentials required to connect to the Insights for Twitter service instance on Bluemix.
+function getTwitterCreds(services) {
     for (var service in services) {
 		if (service.match(/twitter/i)) {
 			return services[service][0].credentials;
@@ -56,47 +63,26 @@ function getTwitterCreds() {
 }
 var twitterCreds = getTwitterCreds();
 
-function getDBCredentialsUrl(jsonData) {
-    var vcapServices = JSON.parse(jsonData);
-    // Pattern match to find the first instance of a Cloudant service in
-    // VCAP_SERVICES. If you know your service key, you can access the
-    // service credentials directly by using the vcapServices object.
-    for (var vcapService in vcapServices) {
-        if (vcapService.match(/cloudant/i)) {
-            return vcapServices[vcapService][0].credentials.url;
+// Return the URL (which includes the credentials) to connect to the Cloudant NoSQL DB service instance on Bluemix.
+function getDBCredentialsUrl(services) {
+    for (var service in services) {
+        if (service.match(/cloudant/i)) {
+            return services[service][0].credentials.url;
         }
     }
 }
 
+// Initialize the connection to the Cloudant DB.
 function initDBConnection() {
-    //When running on Bluemix, this variable will be set to a json object
-    //containing all the service credentials of all the bound services
-    if (process.env.VCAP_SERVICES) {
-        dbCredentials.url = getDBCredentialsUrl(process.env.VCAP_SERVICES);
-    } else { //When running locally, the VCAP_SERVICES will not be set
-
-        // When running this app locally you can get your Cloudant credentials
-        // from Bluemix (VCAP_SERVICES in "cf env" output or the Environment
-        // Variables section for an app in the Bluemix console dashboard).
-        // Once you have the credentials, paste them into a file called vcap-local.json.
-        // Alternately you could point to a local database here instead of a
-        // Bluemix service.
-        // url will be in this format: https://username:password@CLEARCHCLEARCHCLEARCH-bluemix.cloudant.com
-        dbCredentials.url = getDBCredentialsUrl(fs.readFileSync("vcap-local.json", "utf-8"));
-    }
-
+	dbCredentials.url = getDBCredentialsUrl(process.env.VCAP_SERVICES);
     cloudant = require('cloudant')(dbCredentials.url);
-
-    // check if DB exists if not create
     cloudant.db.create(dbCredentials.dbName, function(err, res) {
         if (err) {
-            console.log('Could not create new db: ' + dbCredentials.dbName + ', it might already exist.');
+            console.log('Cloudant DB ' + dbCredentials.dbName + ' already exist.');
         }
     });
-
     db = cloudant.use(dbCredentials.dbName);
 }
-
 initDBConnection();
 
 app.get('/', routes.index);

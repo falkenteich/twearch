@@ -1,0 +1,63 @@
+{
+    "cloudantNoSQLDB": [
+        {
+            "credentials": {
+                "username": "bb684bf5-b333-46b9-a7eb-d555ce07eb48-bluemix",
+                "password": "62943aecd4eb231132d2a02c531c4ed115add728cddd47f45d9e966cbc7868a4",
+                "host": "bb684bf5-b333-46b9-a7eb-d555ce07eb48-bluemix.cloudant.com",
+                "port": 443,
+                "url": "https://bb684bf5-b333-46b9-a7eb-d555ce07eb48-bluemix:62943aecd4eb231132d2a02c531c4ed115add728cddd47f45d9e966cbc7868a4@bb684bf5-b333-46b9-a7eb-d555ce07eb48-bluemix.cloudant.com"
+            },
+            "syslog_drain_url": null,
+            "label": "cloudantNoSQLDB",
+            "provider": null,
+            "plan": "Lite",
+            "name": "twearch-cloudantNoSQLDB",
+            "tags": [
+                "data_management",
+                "ibm_created",
+                "lite",
+                "ibm_dedicated_public"
+            ]
+        }
+    ],
+    "twitterinsights": [
+        {
+            "credentials": {
+                "username": "a07133ca-0e87-40a2-8aab-2c507df2e5d3",
+                "password": "wNEtR07kkh",
+                "host": "cdeservice.mybluemix.net",
+                "port": 443,
+                "url": "https://a07133ca-0e87-40a2-8aab-2c507df2e5d3:wNEtR07kkh@cdeservice.mybluemix.net"
+            },
+            "syslog_drain_url": null,
+            "label": "twitterinsights",
+            "provider": null,
+            "plan": "Free",
+            "name": "twearch-InsightsForTwitter",
+            "tags": [
+                "big_data",
+                "ibm_created",
+                "ibm_dedicated_public"
+            ]
+        }
+    ],
+    "natural-language-understanding": [
+        {
+            "credentials": {
+                "url": "https://gateway.watsonplatform.net/natural-language-understanding/api",
+                "username": "725b9817-08cb-450d-baa6-01fc5644e12e",
+                "password": "on23MmMBZrLQ"
+            },
+            "syslog_drain_url": null,
+            "label": "natural-language-understanding",
+            "provider": null,
+            "plan": "free",
+            "name": "Natural Language Understanding-00",
+            "tags": [
+                "watson",
+                "ibm_created"
+            ]
+        }
+    ]
+}
