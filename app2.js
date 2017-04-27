@@ -53,7 +53,7 @@ var services = getServices();
 console.log('### REMOTE SERVICES ### ' + JSON.stringify(services));
 
 // Return the credentials required to connect to the Insights for Twitter service instance on Bluemix.
-function getTwitterCreds(services) {
+function getTwitterCreds() {
     for (var service in services) {
 		if (service.match(/twitter/i)) {
 			return services[service][0].credentials;
@@ -64,7 +64,7 @@ function getTwitterCreds(services) {
 var twitterCreds = getTwitterCreds();
 
 // Return the URL (which includes the credentials) to connect to the Cloudant NoSQL DB service instance on Bluemix.
-function getDBCredentialsUrl(services) {
+function getDBCredentialsUrl() {
     for (var service in services) {
         if (service.match(/cloudant/i)) {
             return services[service][0].credentials.url;
@@ -74,7 +74,7 @@ function getDBCredentialsUrl(services) {
 
 // Initialize the connection to the Cloudant DB.
 function initDBConnection() {
-	dbCredentials.url = getDBCredentialsUrl(services);
+	dbCredentials.url = getDBCredentialsUrl();
     cloudant = require('cloudant')(dbCredentials.url);
     cloudant.db.create(dbCredentials.dbName, function(err, res) {
         if (err) {
@@ -127,14 +127,14 @@ app.get('/api/twearch', function(request, response) {
 });
 
 function getTweets(options, callback) {
-	console.log("############# Getting Tweets");
+	console.log("GETTWEETS enter");
 	https.get(options, function(response) {
 		var body = '';
 		response.on('data', function(chunk) {
 			body += chunk;
 		});
 		response.on('end', function() {
-			console.log("############# Got Tweets");
+			console.log("GETTWEETS success");
 			var result = JSON.parse(body);
 			callback(null, result.tweets);
 		});
@@ -201,13 +201,10 @@ function saveTweets(term, items) {
 		items: items
 	}, id, function(err, doc) {
 		if (err) {
-			console.log("#$#$#$#$ saveTweets error: "+err);
-			//response.sendStatus(500);
+			console.log("SAVETWEETS error: "+err);
 		} else {
-			console.log("#$#$#$#$ saveTweets success: "+doc);
-			//response.sendStatus(200);
+			console.log("SAVETWEETS success: "+doc);
 		}
-        //response.end();
 	});
 }
 
