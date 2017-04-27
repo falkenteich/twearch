@@ -74,7 +74,7 @@ function getDBCredentialsUrl(services) {
 
 // Initialize the connection to the Cloudant DB.
 function initDBConnection() {
-	dbCredentials.url = getDBCredentialsUrl(process.env.VCAP_SERVICES);
+	dbCredentials.url = getDBCredentialsUrl(services);
     cloudant = require('cloudant')(dbCredentials.url);
     cloudant.db.create(dbCredentials.dbName, function(err, res) {
         if (err) {
